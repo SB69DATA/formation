@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SHOW BY ROCK!! Fes A Live 自動編成補助</title>
+  <script src="js/index.js"></script>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <header>
+      <h1>SHOW BY ROCK!! Fes A Live 自動編成補助</h1>
+
+      <nav>
+        <ul>
+          <li class="select" data-relationarea="auto-formation">自動編成補助</li>
+          <li data-relationarea="setting-bromide">所持ブロマイド設定</li>
+          <li data-relationarea="setting-favorability">好感度設定</li>
+          <!--
+          <li data-relationarea="regist-bromide">ブロマイド登録</li>
+          -->
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div id="inner">
+
+        <div id="auto-formation" class="main-area" style="display:block;">
+          <form>
+            <fieldset>
+              <legend>曲情報</legend>
+              <div id="song-info">
+                <select id="song-list">
+                  <option>手動入力</option>
+                </select>
+                <span id="song-type">
+                  <span>
+                    <input id="song-type-dokidoki" type="radio" name="song-type" value="ドキドキ" checked />
+                    <label for="song-type-dokidoki"><img src="./img/dokidoki.svg" alt="ドキドキ" width="28px" height="28px" /></label>
+                  </span>
+                  <span>
+                    <input id="song-type-kirakira" type="radio" name="song-type" value="キラキラ" />
+                    <label for="song-type-kirakira"><img src="./img/kirakira.svg" alt="キラキラ" width="28px" height="28px" /></label>
+                  </span>
+                  <span>
+                    <input id="song-type-pikapika" type="radio" name="song-type" value="ピカピカ" />
+                    <label for="song-type-pikapika"><img src="./img/pikapika.svg" alt="ピカピカ" width="28px" height="28px" /></label>
+                  </span>
+                </span>
+                
+                <label>
+                  <img src="./img/rhythm.svg" alt="リズム" width="20px" height="20px" />
+                  <input id="song-rhythm" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                    placeholder="100" />
+                </label>
+                <label>
+                  <img src="./img/melody.svg" alt="メロディ" width="20px" height="20px" />
+                  <input id="song-melody" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                    placeholder="100" />
+                </label>
+                <label>
+                  <img src="./img/harmony.svg" alt="ハーモニー" width="20px" height="20px" />
+                  <input id="song-harmony" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                    placeholder="100" />
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend>オプション</legend>
+              <div class="option">
+                <div>
+                  <input id="option-level-max" type="checkbox" />
+                  <label for="option-level-max">Lv最大で計算する</label>
+                </div>
+                <div>
+                  <input id="option-skill-level-max" type="checkbox" />
+                  <label for="option-skill-level-max">スキルLv最大で計算する</label>
+                </div>
+                <div>
+                  <input id="option-favor-max" type="checkbox" />
+                  <label for="option-favor-max">好感度最大で計算する</label>
+                </div>
+                <div>
+                  <input id="option-possession-all" type="checkbox" />
+                  <label for="option-possession-all">全ブロマイド所持状態で計算する</label>
+                </div>
+              </div>
+            </fieldset>
+            <input id="auto-formation-calc" type="button" value="編成候補取得！" />
+          </form>
+          <div id="result-list">
+            <!--
+            <div class="result-header">
+              <span>ブロマイド名</span>
+              <span>リズム</span>
+              <span>メロディー</span>
+              <span>ハーモニー</span>
+              <span>総合力</span>
+              <span>評価値</span>
+            </div>-->
+            <div class="result" style="display:none;">
+              <div class="member-list">
+                <h3>メンバー候補一覧</h3>
+                <div class="member">
+                  <div class="member-inner">
+                    <div class="name-area">
+                      <div class="icon">
+                        <div class="icon-dokidoki"><img src="./img/dokidoki.svg" alt="ドキドキ" width="32px" height="32px" /></div>
+                        <div class="icon-kirakira"><img src="./img/kirakira.svg" alt="キラキラ" width="32px" height="32px" /></div>
+                        <div class="icon-pikapika"><img src="./img/pikapika.svg" alt="ピカピカ" width="32px" height="32px" /></div>
+                      </div>
+                      <div>
+                        <div class="bromide">
+                          <div class="name">ブロマイド名</div>
+                          <div class="level">Lv.60</div>
+                        </div>
+                        <div class="active-skill">
+                          <div class="name">アクティブスキル</div>
+                          <div class="level">Lv.10</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="status">
+                      <div title="ライフ"><div class="life">9999<br>(9999)</div></div>
+                      <div title="リズム (()内は属性補正を含めない値)"><div class="rhythm">99999<br>(99999)</div></div>
+                      <div title="メロディー (()内は属性補正を含めない値)"><div class="melody">99999<br>(99999)</div></div>
+                      <div title="ハーモニー (()内は属性補正を含めない値)"><div class="harmony">99999<br>(99999)</div></div>
+                      <div title="総合力 (()内は属性補正を含めない値)"><div class="sum">99999<br>(99999)</div></div>
+                      <div title="評価値 (スコアの上がりやすさ)"><div class="evaluation">99999</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="support-list">
+                <h3>サポート候補一覧</h3>
+                <div class="member support">
+                  <div class="member-inner">
+                    <div class="name-area">
+                      <div class="icon">
+                        <div class="icon-dokidoki"><img src="./img/dokidoki.svg" alt="ドキドキ" width="32px" height="32px" /></div>
+                        <div class="icon-kirakira"><img src="./img/kirakira.svg" alt="キラキラ" width="32px" height="32px" /></div>
+                        <div class="icon-pikapika"><img src="./img/pikapika.svg" alt="ピカピカ" width="32px" height="32px" /></div>
+                      </div>
+                      <div>
+                        <div class="bromide">
+                          <div class="name">ブロマイド名</div>
+                          <div class="level">Lv.60</div>
+                        </div>
+                        <div class="active-skill">
+                          <div class="name">アクティブスキル</div>
+                          <div class="level">Lv.10</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="status">
+                      <div title="ライフ"><div class="life">9999<br>(9999)</div></div>
+                      <div title="リズム (()内は属性補正を含めない値)"><div class="rhythm">99999<br>(99999)</div></div>
+                      <div title="メロディー (()内は属性補正を含めない値)"><div class="melody">99999<br>(99999)</div></div>
+                      <div title="ハーモニー (()内は属性補正を含めない値)"><div class="harmony">99999<br>(99999)</div></div>
+                      <div title="総合力 (()内は属性補正を含めない値)"><div class="sum">99999<br>(99999)</div></div>
+                      <div title="評価値 (スコアの上がりやすさ)"><div class="evaluation">99999</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="setting-favorability" class="main-area">
+          <form>
+            <div class="myumon-list">
+              <div class="myumon">
+                <div class="band">
+                  バンド名
+                </div>
+                <div class="name">
+                  ミューモン名
+                </div>
+                <div class="favorability">
+                  <div>
+                    <input type="radio" name="favorability" class="acquaintance" value="1" />
+                    <label>知り合い</label>
+                  </div>
+                  <div>
+                    <input type="radio" name="favorability" class="friend" value="2" />
+                    <label>友達</label>
+                  </div>
+                  <div>
+                    <input type="radio" name="favorability" class="best-friend" value="3" />
+                    <label>親友</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="setting-bromide" class="main-area">
+          <form>
+            <div class="bromide-list">
+              <div class="bromide">
+                <input type="hidden" class="myumon-name" />
+                <input type="hidden" class="bromide-name" />
+                <div class="type">
+                  <div>
+                    <div class="icon-dokidoki"><img src="./img/dokidoki.svg" alt="ドキドキ" width="20px" height="20px" /></div>
+                    <div class="icon-kirakira"><img src="./img/kirakira.svg" alt="キラキラ" width="20px" height="20px" /></div>
+                    <div class="icon-pikapika"><img src="./img/pikapika.svg" alt="ピカピカ" width="20px" height="20px" /></div>
+                  </div>
+                </div>
+                <div class="status">
+                  <div class="main-info">
+                    <div>
+                      <div class="band">バンド名</div>
+                    </div>
+                    <div>
+                      <div class="rarity">レアリティー</div>
+                      <div class="name">ブロマイド名</div>
+                      <div class="level">
+                        Lv.
+                        <span class="select-level">
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <span>■</span>
+                        <span class="param life">999</span>
+                      </div>
+                      <div>
+                        <img src="./img/rhythm.svg" alt="リズム" width="20px" height="20px" />
+                        <span class="param rhythm">9999 (9999)</span>
+                      </div>
+                      <div>
+                        <img src="./img/melody.svg" alt="メロディ" width="20px" height="20px" />
+                        <span class="param melody">9999 (9999)</span>
+                      </div>
+                      <div>
+                        <img src="./img/harmony.svg" alt="ハーモニー" width="20px" height="20px" />
+                        <span class="param harmony">9999 (9999)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="skill-info">
+                    <div class="name">
+                      <div class="active-skill">アクティブスキル</div>
+                      <div class="passive-skill">パッシブスキル</div>
+                      <div class="support-skill">サポートスキル</div>
+                    </div>
+                    <div class="level">
+                      <div class="active-skill-level">
+                        Lv.
+                        <select>
+                          <option value="10">10</option>
+                          <option value="9">9</option>
+                          <option value="8">8</option>
+                          <option value="7">7</option>
+                          <option value="6">6</option>
+                          <option value="5">5</option>
+                          <option value="4">4</option>
+                          <option value="3">3</option>
+                          <option value="2">2</option>
+                          <option value="1">1</option>
+                        </select>
+                      </div>
+                      <div class="passive-skill-level">
+                        Lv.
+                        <select>
+                          <option value="10">10</option>
+                          <option value="9">9</option>
+                          <option value="8">8</option>
+                          <option value="7">7</option>
+                          <option value="6">6</option>
+                          <option value="5">5</option>
+                          <option value="4">4</option>
+                          <option value="3">3</option>
+                          <option value="2">2</option>
+                          <option value="1">1</option>
+                        </select>
+                      </div>
+                      <div class="support-skill-level">
+                        Lv.
+                        <select>
+                          <option value="10">10</option>
+                          <option value="9">9</option>
+                          <option value="8">8</option>
+                          <option value="7">7</option>
+                          <option value="6">6</option>
+                          <option value="5">5</option>
+                          <option value="4">4</option>
+                          <option value="3">3</option>
+                          <option value="2">2</option>
+                          <option value="1">1</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="edit">
+                  <div>
+                    <input id="possession" class="possession" type="checkbox" />
+                    <label for="possession" class="possession"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+        <div id="regist-bromide" class="main-area">
+          <!--
+          <form class="input-bromide-info">
+            <label>ブロマイド名<input type="text"  class="bromide-name" /></label>
+            属性
+            <span class="bromide-type">
+              <span>
+                <input id="bromide-type-dokidoki" type="radio" name="bromide-type" value="ドキドキ" checked />
+                <label for="bromide-type-dokidoki"><img src="./img/dokidoki.svg" alt="ドキドキ" width="28px" height="28px" /></label>
+              </span>
+              <span>
+                <input id="bromide-type-kirakira" type="radio" name="bromide-type" value="キラキラ" />
+                <label for="bromide-type-kirakira"><img src="./img/kirakira.svg" alt="キラキラ" width="28px" height="28px" /></label>
+              </span>
+              <span>
+                <input id="bromide-type-pikapika" type="radio" name="bromide-type" value="ピカピカ" />
+                <label for="bromide-type-pikapika"><img src="./img/pikapika.svg" alt="ピカピカ" width="28px" height="28px" /></label>
+              </span>
+            </span>
+            
+            <label>
+              <img src="./img/rhythm.svg" alt="リズム" width="20px" height="20px" />
+              <input id="bromide-rhythm" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                placeholder="100" />
+            </label>
+            <label>
+              <img src="./img/melody.svg" alt="メロディ" width="20px" height="20px" />
+              <input id="bromide-melody" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                placeholder="100" />
+            </label>
+            <label>
+              <img src="./img/harmony.svg" alt="ハーモニー" width="20px" height="20px" />
+              <input id="bromide-harmony" type="number" pattern="^[0-9]{1,4}$" min="0" max="9999" value="100"
+                placeholder="100" />
+            </label>
+            
+          </form>
+          -->
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+</body>
+
+</html>
